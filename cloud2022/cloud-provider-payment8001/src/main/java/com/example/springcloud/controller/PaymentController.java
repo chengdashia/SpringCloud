@@ -32,16 +32,14 @@ public class PaymentController {
         return new CommonResult(444,"插入数据库失败",result);
     }
 
-
     @PostMapping("/get/{id}")
-    public CommonResult getPaymentById(@PathVariable("id") Long id){
+    public CommonResult<Payment> getPaymentById(@PathVariable("id") Long id){
         Payment payment = paymentService.getPaymentById(id);
         log.info("****查询结果*****:"+payment);
         if(payment != null){
-            return new CommonResult(200,"查询成功",payment);
+            return new CommonResult(200,"查询成功12",payment);
         }
         return new CommonResult(444,"没有对应的记录，查询id"+id);
     }
-
 
 }
