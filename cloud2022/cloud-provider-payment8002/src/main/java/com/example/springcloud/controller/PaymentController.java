@@ -41,4 +41,9 @@ public class PaymentController {
         return new CommonResult(444,"没有对应的记录，查询id"+id);
     }
 
+    @GetMapping("/lb")
+    public String getPaymentLB(){
+        return servicePort;
+    }
+
 }
