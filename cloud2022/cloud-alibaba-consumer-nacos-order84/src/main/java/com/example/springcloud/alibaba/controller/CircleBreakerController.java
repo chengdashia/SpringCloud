@@ -28,9 +28,9 @@ public class CircleBreakerController {
     @RequestMapping("/fallback/{id}")
     //@SentinelResource(value = "fallback") //没有配置
     //@SentinelResource(value = "fallback",fallback = "handlerFallback") //fallback只负责业务异常
-    @SentinelResource(value = "fallback",blockHandler = "blockHandler") //blockHandler只负责sentinel控制台配置违规
-    public CommonResult<Payment> fallback(@PathVariable Long id)
-    {
+    //@SentinelResource(value = "fallback",blockHandler = "blockHandler") //blockHandler只负责sentinel控制台配置违规
+    @SentinelResource(value = "fallback",fallback = "handlerFallback",blockHandler = "blockHandler")
+    public CommonResult<Payment> fallback(@PathVariable Long id){
         CommonResult<Payment> result = restTemplate.getForObject(SERVICE_URL + "/paymentSQL/"+id,CommonResult.class,id);
 
         if (id == 4) {
@@ -42,13 +42,12 @@ public class CircleBreakerController {
         return result;
     }
     //本例是fallback
-/*    public CommonResult handlerFallback(@PathVariable  Long id,Throwable e) {
+    public CommonResult handlerFallback(@PathVariable  Long id,Throwable e) {
         Payment payment = new Payment(id,"null");
         return new CommonResult<>(444,"兜底异常handlerFallback,exception内容  "+e.getMessage(),payment);
-    }*/
-
-    /**本例是blockHandler*/
-    public CommonResult blockHandler(@PathVariable  Long id, BlockException blockException) {
+    }
+    //本例是blockHandler
+    public CommonResult blockHandler(@PathVariable  Long id,BlockException blockException) {
         Payment payment = new Payment(id,"null");
         return new CommonResult<>(445,"blockHandler-sentinel限流,无此流水: blockException  "+blockException.getMessage(),payment);
     }
